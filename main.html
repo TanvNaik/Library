@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library</title>
+
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <div class="main">
+      <div class="header">
+        <img
+          src="/images/undraw_Reading_re_29f8.svg"
+          alt="Reading"
+          class="img1"
+        />
+        <h1>LIBRARY</h1>
+      </div>
+
+      <form>
+        <label for="title">
+          <input type="text" id="title" name="title" placeholder="Title" />
+        </label>
+        <label for="author">
+          <input type="text" name="author" id="author" placeholder="Author" />
+        </label>
+        <label for="numPages">
+          <input
+            type="text"
+            id="numPages"
+            name="numPages"
+            placeholder="No of Pages"
+          />
+        </label>
+        <label for="status">
+          <select id="status">
+            <option value="true">Read</option>
+            <option value="false" selected>Not Read</option>
+          </select>
+        </label>
+
+        <label for="addBook"><button id="addBook">Add Book</button></label>
+      </form>
+
+      <div class="list">
+        <table id="list">
+          <tr>
+            <th>Book Title</th>
+            <th>Author</th>
+            <th>Number of Pages</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="logout">
+      <button onclick="mainApp.logOut()">Logout</button>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+
+    <script src="js/firebase.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>
