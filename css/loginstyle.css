@@ -1,0 +1,26 @@
+body {
+  background-color: rgba(87, 160, 255, 0.76);
+  background-color: rgb(56 7 37);
+}
+.login {
+  background-color: #fff0d0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 50%;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  text-align: center;
+  box-shadow: -1px -1px 41px 0px rgb(255 255 255 / 75%);
+  -webkit-box-shadow: -1px -1px 41px 0px rgb(255 255 255 / 75%);
+  -moz-box-shadow: -1px -1px 41px 0px rgb(255 255 255 / 75%);
+}
+h1 {
+  color: rgb(35, 119, 214);
+}

@@ -136,6 +136,9 @@ addBook.addEventListener("click", (e) => {
     );
     updateTable();
   }
+  title.value = "";
+  author.value = "";
+  numPages.value = "";
 });
 
 //Delete Book
