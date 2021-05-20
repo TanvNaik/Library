@@ -1,41 +1,22 @@
+"use strict";
 var mainApp = {};
-(function () {
-  var firebase = app_firebase;
-  var uid = null;
+var firebase = app_firebase;
+var uid = null;
 
-  firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      // User is signed in.
-      uid = user.id;
-    } else {
-      //redirect to login page
-      window.location.replace("login.html");
-    }
-  });
-  function logOut() {
-    firebase.auth().signOut();
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    // User is signed in.
+    uid = user.email;
+  } else {
+    //redirect to login page
+    window.location.replace("login.html");
   }
-  function messageHandler(err) {
-    if (!!err) {
-      console.log(err);
-    } else {
-      console.log("Success");
-    }
-  }
+});
 
-  function fnCreate() {
-    var path = "users/" + uid;
-    var data = {
-      name: "TAnvi",
-      age: 20,
-      message: "Hello Firebase"
-    };
-    app_firebase.databaseApi.create(path, data, messageHandler);
-  }
-
-  mainApp.logOut = logOut;
-})();
-
+mainApp.logOut = () => {
+  firebase.auth().signOut();
+};
+var db = firebase.firestore();
 /*----------------DOM Elements-----------------*/
 let title = document.querySelector("#title");
 let author = document.querySelector("#author");
@@ -49,7 +30,7 @@ let deletebtn = document.querySelector(".delbtn");
 let statusbtn = document.querySelector(".statusbtn");
 let email;
 let myLibrary = [];
-
+var mapLibrary = {};
 /*-----------------Function constructor---------------------*/
 function Book(title, author, numPages, status) {
   this.title = title;
@@ -66,6 +47,12 @@ function addBookToLibrary(title, author, numPages, status) {
 
 function displayBooks() {
   for (let i = 0; i < myLibrary.length; i++) {
+    mapLibrary[myLibrary[i].title] = {
+      author: myLibrary[i].author,
+      numPages: myLibrary[i].numPages,
+      readStatus: myLibrary[i].readStatus
+    };
+
     table.insertAdjacentHTML(
       "beforeend",
       `
@@ -79,7 +66,20 @@ function displayBooks() {
    `
     );
   }
+  mainApp.create();
 }
+mainApp.create = function () {
+  // Add a new document in collection
+  db.collection("users")
+    .doc(String(uid))
+    .set(mapLibrary)
+    .then(() => {
+      console.log("Document successfully written!");
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+};
 function updateTable() {
   //Updating UI
   let rows = document.querySelectorAll(".Book");
@@ -108,9 +108,7 @@ function deleteBook(row) {
   updateTable();
 }
 /*-----------------------EVENT LISTENERS-------------------------*/
-/* window.addEventListener("load", () => {
-  let emailID = prompt("Enter Your Email ID");
-}); */
+
 addBook.addEventListener("click", (e) => {
   e.preventDefault();
   if (title.value == "") {
