@@ -1,18 +1,17 @@
 "use strict";
 var mainApp = {};
 var firebase = app_firebase;
-var uid = null;
+var userEmail = null;
 
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     // User is signed in.
-    uid = user.email;
+    userEmail = user.email;
   } else {
     //redirect to login page
     window.location.replace("login.html");
   }
 });
-
 mainApp.logOut = () => {
   firebase.auth().signOut();
 };
@@ -28,9 +27,9 @@ let table = document.querySelector("#list");
 let listdiv = document.querySelector(".list");
 let deletebtn = document.querySelector(".delbtn");
 let statusbtn = document.querySelector(".statusbtn");
-let email;
 let myLibrary = [];
 var mapLibrary = {};
+var cloudData;
 /*-----------------Function constructor---------------------*/
 function Book(title, author, numPages, status) {
   this.title = title;
@@ -46,6 +45,7 @@ function addBookToLibrary(title, author, numPages, status) {
 }
 
 function displayBooks() {
+  mapLibrary = {};
   for (let i = 0; i < myLibrary.length; i++) {
     mapLibrary[myLibrary[i].title] = {
       author: myLibrary[i].author,
@@ -70,15 +70,7 @@ function displayBooks() {
 }
 mainApp.create = function () {
   // Add a new document in collection
-  db.collection("users")
-    .doc(String(uid))
-    .set(mapLibrary)
-    .then(() => {
-      console.log("Document successfully written!");
-    })
-    .catch((error) => {
-      console.error("Error writing document: ", error);
-    });
+  db.collection("users").doc(String(userEmail)).set(mapLibrary);
 };
 function updateTable() {
   //Updating UI
@@ -105,10 +97,28 @@ function deleteBook(row) {
       myLibrary.splice(i, 1);
     }
   }
+  db.collection("users").doc(String(userEmail)).delete();
   updateTable();
 }
 /*-----------------------EVENT LISTENERS-------------------------*/
-
+window.addEventListener("load", () => {
+  db.collection("users")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        cloudData = doc.data();
+        for (let i in cloudData) {
+          addBookToLibrary(
+            i,
+            cloudData[i].author,
+            cloudData[i].numPages,
+            cloudData[i].readStatus === "Read" ? "true" : "False"
+          );
+        }
+        updateTable();
+      });
+    });
+});
 addBook.addEventListener("click", (e) => {
   e.preventDefault();
   if (title.value == "") {
@@ -141,7 +151,3 @@ listdiv.addEventListener("click", function (e) {
     toggleStatus(e.target.parentNode.parentNode);
   }
 });
-
-////////////////////////////////////////////////////////////////////////////////////
-addBookToLibrary("Wings Of Fire", "A. P. J. Abdul Kalam", 228, "Not Read");
-updateTable();
