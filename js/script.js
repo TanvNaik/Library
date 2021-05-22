@@ -9,7 +9,7 @@ firebase.auth().onAuthStateChanged((user) => {
     userEmail = user.email;
   } else {
     //redirect to login page
-    window.location.replace("http://library-proj.surge.sh/");
+    window.location.replace("login.html");
   }
 });
 mainApp.logOut = () => {
