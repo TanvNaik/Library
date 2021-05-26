@@ -9,5 +9,3 @@
 ## Acknowledgments
 - Firebase [Google Docs](https://firebase.google.com/docs/?authuser=0)
 
-## Preview
-![Alt Text]("./images/login-page.png)
